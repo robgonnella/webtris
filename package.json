@@ -1,0 +1,30 @@
+{
+  "name": "webtris",
+  "version": "1.0.0",
+  "description": "Tetris as a standalone react component!",
+  "author": "Rob Gonnella",
+  "main": "dist/webtris/webtris-container.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "cp:static": "npm run clean && mkdir -p dist && cp -R ./static/* dist",
+    "build:dec": "tsc --declaration --emitDeclarationOnly",
+    "build": "npm run cp:static && npm run build:dec && tsc",
+    "prepublish": "npm run build",
+    "postinstall": "npm run build"
+  },
+  "files": ["dist/**/*"],
+  "devDependencies": {
+    "@types/node": "^10.11.4",
+    "@types/react": "^16.4.16",
+    "@types/react-dom": "^16.0.8",
+    "html-webpack-plugin": "^3.2.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "rimraf": "^2.6.2",
+    "ts-loader": "^5.2.1",
+    "typescript": "^3.1.1",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
+  }
+}
