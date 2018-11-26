@@ -9,13 +9,23 @@
 ```javascript
 import Webtris from 'webtris';
 
+const props = {
+  tetrisThemeSrc: 'audio/theme.mp3',
+  rotateAudioSrc: 'audio/rotate.mp3',
+  lineRemovalAudioSrc: 'audio/remove.mp3',
+  lineRemoval4AudioSrc: 'audio/removal4.mp3',
+  hitAudioSrc: 'audio/hit.mp3',
+  backgroundImage: 'images/background.png',
+  blockWidth: 20
+};
+
 class MyApp extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    return <Webtris blockWidth={20} />;
+    return <Webtris {...props} />;
   }
 }
 ```
