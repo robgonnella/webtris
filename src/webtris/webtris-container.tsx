@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Webtris from './webtris';
 import {
+  createTetrisWorker,
   getInitialState as getInitialTetrisState,
   TetrisState,
   TetrisEngineAction } from '../lib/tetris-engine';
@@ -15,15 +16,21 @@ interface WebtrisState {
   selectedLevel: number;
 }
 
-interface WebtrisProps {
-  blockWidth?: number
+export interface WebtrisProps {
+  tetrisThemeSrc: string;
+  rotateAudioSrc: string;
+  lineRemovalAudioSrc: string;
+  lineRemoval4AudioSrc: string;
+  hitAudioSrc: string;
+  backgroundImage: string;
+  blockWidth?: number;
 };
 
 export default class WebtrisContainer extends React.Component<
   WebtrisProps,
   WebtrisState
 > {
-  private readonly tetrisWorker = new Worker('tetrisWorker.js');
+  private readonly tetrisWorker: Worker = createTetrisWorker();
   private readonly gameMusic = new Audio();
   private readonly rotateSound = new Audio();
   private readonly lineRemovalSound = new Audio();
@@ -36,26 +43,26 @@ export default class WebtrisContainer extends React.Component<
 
   constructor(props: WebtrisProps) {
     super(props);
-
+    console.log('----worker -->', this.tetrisWorker);
     this.gameMusic.autoplay = false;
     this.gameMusic.addEventListener('ended', function () {
       this.currentTime = 0;
       this.play();
     }, false);
-    this.gameMusic.src = 'audio/tetris-theme.m4a';
+    this.gameMusic.src = props.tetrisThemeSrc;
     this.rotateSound.autoplay = false;
-    this.rotateSound.src = 'audio/block-rotate.mp3';
+    this.rotateSound.src = props.rotateAudioSrc;
     this.lineRemovalSound.autoplay = false;
-    this.lineRemovalSound.src = 'audio/line-remove.mp3';
+    this.lineRemovalSound.src = props.lineRemovalAudioSrc;
     this.lineRemoval4Sound.autoplay = false;
-    this.lineRemoval4Sound.src = 'audio/line-removal4.mp3';
+    this.lineRemoval4Sound.src = props.lineRemoval4AudioSrc;
     this.hitSound.autoplay = false;
-    this.hitSound.src = 'audio/slow-hit.mp3';
+    this.hitSound.src = props.hitAudioSrc;
 
     this.tetrisWorker.onmessage = this.handleTetrisStateChange;
 
     const initalTetrisState = getInitialTetrisState();
-    const blockWidth = this.props.blockWidth || 10;
+    const blockWidth = props.blockWidth || 10;
     this.state = {
       tetris: getInitialTetrisState(),
       isPaused: false,
@@ -145,7 +152,8 @@ export default class WebtrisContainer extends React.Component<
       startGame: this.startGame,
       playAgain: this.playAgain,
       selectLevel: this.selectLevel,
-      selectedLevel: this.state.selectedLevel
+      selectedLevel: this.state.selectedLevel,
+      backgroundImage: this.props.backgroundImage
     }
     return <Webtris {...props} />;
   }

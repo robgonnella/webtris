@@ -1,4 +1,6 @@
 export type NumberVector = Array<number[]>;
+export type Board = Array<Array<0 | Color>>;
+
 export type Color =
   'red' | 'cyan' | 'magenta' | 'blue' | 'yellow' | 'green' | 'purple';
 
@@ -26,6 +28,18 @@ export interface StatsPiece {
 }
 
 export type Stats = Record<GamePiece['type'], StatsPiece>;
+
+export interface TetrisState {
+  board: Board;
+  level: number;
+  score: number;
+  clearedLines: number;
+  gameover: boolean;
+  gameInProgress: boolean;
+  nextShape: Array<number[]>;
+  nextColor: Color;
+  stats: Stats;
+}
 
 export interface ITetrisEngine {
   play(): void;

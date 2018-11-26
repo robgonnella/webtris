@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TetrisEngine, { TetrisState, StatsPiece } from '../lib/tetris-engine';
+import { TetrisState, StatsPiece } from '../lib/tetris-engine';
 
 interface StatsProps {
   gameover: boolean;
@@ -314,7 +314,7 @@ interface WebtrisProps {
   canvasWidth: number;
   canvasHeight: number;
   firstLaunch: boolean;
-  stats: TetrisEngine['stats'];
+  stats: TetrisState['stats'];
   level: number;
   score: number;
   clearedLines: number;
@@ -322,6 +322,7 @@ interface WebtrisProps {
   gameover: boolean;
   gameInProgress: boolean;
   selectedLevel: number;
+  backgroundImage: string;
   selectLevel(level: number): void;
   startGame(): void;
   playAgain(): void;
@@ -332,7 +333,7 @@ const Webtris: React.StatelessComponent<WebtrisProps> = (
 ): React.ReactElement<WebtrisProps> => {
   return (
     <div style={{
-        backgroundImage: 'url(./images/tetris-background.png)',
+        backgroundImage: `url(${props.backgroundImage})`,
         width: '100vw',
         height: '100vh',
         textAlign: 'center',

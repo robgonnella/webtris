@@ -4,11 +4,11 @@
   "description": "Tetris as a standalone react component!",
   "author": "Rob Gonnella",
   "main": "dist/webtris/webtris-container.js",
+  "types": "dist/webtris/webtris-container.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "cp:static": "npm run clean && mkdir -p dist && cp -R ./static/* dist",
     "build:dec": "tsc --declaration --emitDeclarationOnly",
-    "build": "npm run cp:static && npm run build:dec && tsc",
+    "build": "npm run clean && npm run build:dec && tsc",
     "prepublish": "npm run build",
     "postinstall": "npm run build"
   },
