@@ -9,13 +9,13 @@
 Add dependency to your package.json file:
 
 ```
-  "webtris": "git+https://github.com/robgonnella/webtris.git"
+  "webtris": "https://github.com/robgonnella/webtris.git"
 ```
 
 Render the react component:
 
-```javascript
-import Webtris from 'webtris';
+```ts
+import { WebTris, WebTrisProps } from 'webtris';
 
 class MyApp extends React.Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class MyApp extends React.Component {
   }
 
   render() {
-    const props = {
+    const props: WebTrisProps = {
       tetrisThemeSrc: 'audio/theme.mp3',
       rotateAudioSrc: 'audio/rotate.mp3',
       lineRemovalAudioSrc: 'audio/remove.mp3',
@@ -32,7 +32,17 @@ class MyApp extends React.Component {
       backgroundImage: 'images/background.png',
       blockWidth: 20
     };
-    return <Webtris {...props} />;
+    return <WebTris {...props} />;
   }
 }
 ```
+
+Props: All Props are optional
+- style - React.CSSProperties: specify extra styling for the main component
+- blockWidth - number: determines the overall size of the same: default = 15;
+- backgroundImage - string: set a background image;
+- tetrisThemeSrc: string: audio file source for game play music
+- rotateAudioSrc - string: audio file source for rotation sound
+- lineRemovalAudioSrc - string: audio file source for single line cleared sound
+- lineRemoval4AudioSrc - string: audio file source for a tetris!
+- hitAudioSrc - string: audio file source for when a block lands
