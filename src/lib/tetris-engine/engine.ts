@@ -63,7 +63,7 @@ export function getInitialState(): TetrisTypes.TetrisState {
 }
 
 
-type ChangeCallback = (b: TetrisTypes.TetrisState) => void;
+type ChangeCallback = (s: TetrisTypes.TetrisState) => void;
 
 function generateCleanBoard(): TetrisTypes.Board {
   let board = [];
@@ -156,7 +156,7 @@ export class TetrisEngine implements TetrisTypes.ITetrisEngine {
   }
 
   public readonly setLevel = (level: number) => {
-    if (level !== 0 && level === this.level) { return; }
+    if (level === this.level) { return; }
     this.level = level;
     if (level === 0) {
       this.loopSpeed = 1000;
@@ -174,7 +174,7 @@ export class TetrisEngine implements TetrisTypes.ITetrisEngine {
     if (accelerated) {
       const shape = this.currentPiece.shape[this.currentPiece.rotation];
       const height = shape.length;
-      // points for accelerated drop (height of peice plus drop increment)
+      // points for accelerated drop (height of piece plus drop increment)
       this.score += height + 1;
     }
   }
@@ -251,17 +251,24 @@ export class TetrisEngine implements TetrisTypes.ITetrisEngine {
   }
 
   private readonly renderCurrentPiece = (): void => {
-    const board = [...this.board];
+    let board = [...this.board];
     const piece = { ...this.currentPiece };
     const rowPos = piece.rowPos;
     const colPos = piece.colPos;
     const rotation = this.currentPiece.rotation
     const shape = [...this.currentPiece.shape[rotation]];
 
+    loop1:
     for (let row = 0; row < shape.length; ++row) {
+      loop2:
       for (let col = 0; col < shape[0].length; ++col) {
         if (shape[row][col] === 1) {
-          board[row + rowPos][col + colPos] = piece.color
+          if (board[row + rowPos][col + colPos] !== 0) {
+            board = this.board;
+            break loop1;
+          } else {
+            board[row + rowPos][col + colPos] = piece.color
+          }
         }
       }
     }

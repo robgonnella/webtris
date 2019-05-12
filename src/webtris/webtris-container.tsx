@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Webtris from './webtris';
+import WebTrisView from './webtris';
 import {
   getInitialState as getInitialTetrisState,
   TetrisState,
@@ -8,7 +8,7 @@ import {
 // @ts-ignore
 import { createTetrisWorker } from './worker';
 
-interface WebtrisState {
+interface WebTrisState {
   tetris: TetrisState;
   isPaused: boolean;
   firstLaunch: boolean;
@@ -18,7 +18,7 @@ interface WebtrisState {
   selectedLevel: number;
 }
 
-export interface WebtrisProps {
+export interface WebTrisProps {
   style?: React.CSSProperties;
   blockWidth?: number;
   tetrisThemeSrc?: string;
@@ -29,9 +29,9 @@ export interface WebtrisProps {
   backgroundImage?: string;
 };
 
-export class WebtrisContainer extends React.Component<
-  WebtrisProps,
-  WebtrisState
+export class WebTris extends React.Component<
+  WebTrisProps,
+  WebTrisState
 > {
   private readonly tetrisWorker: Worker = createTetrisWorker();
   private readonly gameMusic?: HTMLAudioElement;
@@ -44,7 +44,7 @@ export class WebtrisContainer extends React.Component<
   private boardCtx?: CanvasRenderingContext2D;
   private nextCtx?: CanvasRenderingContext2D;
 
-  constructor(props: WebtrisProps) {
+  constructor(props: WebTrisProps) {
     super(props);
     if (this.props.tetrisThemeSrc) {
       this.gameMusic = new Audio(this.props.tetrisThemeSrc);
@@ -168,7 +168,7 @@ export class WebtrisContainer extends React.Component<
       selectedLevel: this.state.selectedLevel,
       backgroundImage: this.props.backgroundImage
     }
-    return <Webtris {...props} />;
+    return <WebTrisView {...props} />;
   }
 
   private toggleGameAudio = (): void => {
