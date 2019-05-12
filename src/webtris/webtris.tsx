@@ -70,7 +70,8 @@ const SideCarLeft: React.StatelessComponent<SideCarLeftProps> = (
         border: '5px solid grey',
         marginRight: '25px',
         verticalAlign: 'top',
-        backgroundColor: 'midnightblue'
+        backgroundColor: 'midnightblue',
+        padding: 10
       }}
     >
       {pieces}
@@ -189,9 +190,8 @@ const Instructions: React.StatelessComponent<{}> = (
 ): React.ReactElement<{}> => {
   return (
     <React.Fragment>
-      <p>Use arrow keys to move piece to left, right, and accelerate down</p>
-      <p>Press "a" to rotate piece to left</p>
-      <p>Press "s" to rotate piece to right</p>
+      <p>Use arrow keys to move piece</p>
+      <p>Press "a" or "s" to rotate piece</p>
       <p>Press spacebar to pause game</p>
     </React.Fragment>
   );
@@ -254,7 +254,8 @@ const SideCarRight: React.StatelessComponent<SideCarRightProps> = (
         height: props.height,
         border: '5px solid grey',
         verticalAlign: 'top',
-        backgroundColor: 'midnightblue'
+        backgroundColor: 'midnightblue',
+        padding: 10
       }}
     >
       {content}
@@ -322,7 +323,8 @@ interface WebtrisProps {
   gameover: boolean;
   gameInProgress: boolean;
   selectedLevel: number;
-  backgroundImage: string;
+  style?: React.CSSProperties;
+  backgroundImage?: string;
   selectLevel(level: number): void;
   startGame(): void;
   playAgain(): void;
@@ -333,7 +335,7 @@ const Webtris: React.StatelessComponent<WebtrisProps> = (
 ): React.ReactElement<WebtrisProps> => {
   return (
     <div style={{
-        backgroundImage: `url(${props.backgroundImage})`,
+        backgroundImage: `url(${props.backgroundImage || ''})`,
         width: '100vw',
         height: '100vh',
         textAlign: 'center',
@@ -341,7 +343,8 @@ const Webtris: React.StatelessComponent<WebtrisProps> = (
         verticalAlign: 'top',
         paddingTop: 25,
         fontFamily: 'Georgia',
-        letterSpacing: 2
+        letterSpacing: 2,
+        ...props.style,
       }}
     >
       <SideCarLeft

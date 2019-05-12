@@ -8,20 +8,23 @@
   "scripts": {
     "clean": "rimraf dist",
     "build:dec": "tsc --declaration --emitDeclarationOnly",
-    "build": "npm run clean && npm run build:dec && tsc",
+    "build:worker": "ts-node build-worker.ts",
+    "build": "npm run clean && npm run build:dec && tsc && npm run build:worker",
     "prepublish": "npm run build",
     "postinstall": "npm run build"
   },
-  "files": ["dist/**/*"],
+  "files": [
+    "dist/**/*"
+  ],
   "devDependencies": {
     "@types/node": "^10.11.4",
-    "@types/react": "^16.4.16",
-    "@types/react-dom": "^16.0.8",
+    "@types/react": "^16.8.17",
     "html-webpack-plugin": "^3.2.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "rimraf": "^2.6.2",
     "ts-loader": "^5.2.1",
+    "ts-node": "^8.1.0",
     "typescript": "^3.1.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",

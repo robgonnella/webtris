@@ -1,14 +1,7 @@
-import {
-  Board,
-  Color,
-  GamePiece,
-  ITetrisEngine,
-  Rotation,
-  Stats,
-  TetrisState } from './types';
+import * as TetrisTypes from './types';
 import { L, RL, Zig, Zag, Line, Block, T } from './game-pieces';
 
-function getInitialStats(): Stats {
+function getInitialStats(): TetrisTypes.Stats {
   return {
     T: {
       type: 'T',
@@ -55,7 +48,7 @@ function getInitialStats(): Stats {
   };
 }
 
-export function getInitialState(): TetrisState {
+export function getInitialState(): TetrisTypes.TetrisState {
   return {
     board: generateCleanBoard(),
     level: 0,
@@ -70,9 +63,9 @@ export function getInitialState(): TetrisState {
 }
 
 
-type ChangeCallback = (b: TetrisState) => void;
+type ChangeCallback = (b: TetrisTypes.TetrisState) => void;
 
-function generateCleanBoard(): Board {
+function generateCleanBoard(): TetrisTypes.Board {
   let board = [];
   for (let i = 0; i < 22; ++i) {
     board.push(Array(10).fill(0));
@@ -80,8 +73,8 @@ function generateCleanBoard(): Board {
   return board;
 }
 
-const rotations: Rotation[] = [0, 90, 180, 270];
-const colors: Color[] = [
+const rotations: TetrisTypes.Rotation[] = [0, 90, 180, 270];
+const colors: TetrisTypes.Color[] = [
   'red',
   'blue',
   'green',
@@ -98,24 +91,26 @@ const MULTIPLIERS = {
   4: 1200
 }
 
-function isColor(a: any): a is Color {
-  return typeof a === 'string' && colors.includes(a as Color);
+function isColor(a: any): a is TetrisTypes.Color {
+  return typeof a === 'string' && colors.includes(a as TetrisTypes.Color);
 }
 
-export class TetrisEngine implements ITetrisEngine {
+export class TetrisEngine implements TetrisTypes.ITetrisEngine {
 
-  private readonly gamePieces: GamePiece[] = [L, RL, Zig, Zag, Line, Block, T];
-  private board: Board = generateCleanBoard();
+  private readonly gamePieces: TetrisTypes.GamePiece[] = [
+    L, RL, Zig, Zag, Line, Block, T
+  ];
+  private board: TetrisTypes.Board = generateCleanBoard();
   private level: number = 0;
   private score: number = 0;
   private clearedLines: number = 0;
   private paused: boolean = false;
   private gameover: boolean = false;
   private gameInProgress: boolean = false;
-  private stats: Stats = getInitialStats();
+  private stats: TetrisTypes.Stats = getInitialStats();
   private levelUpIn: number = 10;
-  private currentPiece: GamePiece;
-  private nextPiece: GamePiece;
+  private currentPiece: TetrisTypes.GamePiece;
+  private nextPiece: TetrisTypes.GamePiece;
   private loopSpeed: number = 1000;
   private loopTimeout?: NodeJS.Timer;
   private updateRenderer: ChangeCallback;
@@ -161,7 +156,7 @@ export class TetrisEngine implements ITetrisEngine {
   }
 
   public readonly setLevel = (level: number) => {
-    if (level === this.level) { return; }
+    if (level !== 0 && level === this.level) { return; }
     this.level = level;
     if (level === 0) {
       this.loopSpeed = 1000;
@@ -200,7 +195,7 @@ export class TetrisEngine implements ITetrisEngine {
     this.modifyCurrentPiece('rotate-right');
   }
 
-  private readonly getState = (): TetrisState => {
+  private readonly getState = (): TetrisTypes.TetrisState => {
     return {
       board: this.board,
       level: this.level,
@@ -224,7 +219,7 @@ export class TetrisEngine implements ITetrisEngine {
     this.loopTimeout = timeoutId as NodeJS.Timer
   }
 
-  private readonly getRandomPiece = (): GamePiece => {
+  private readonly getRandomPiece = (): TetrisTypes.GamePiece => {
     let piece = {
       ...this.gamePieces[
       Math.floor(Math.random() * this.gamePieces.length)
@@ -232,7 +227,7 @@ export class TetrisEngine implements ITetrisEngine {
     };
     const rotation = (
       rotations[Math.floor(Math.random() * 4)]
-    ) as Rotation;
+    ) as TetrisTypes.Rotation;
     const color = colors[Math.floor(Math.random() * colors.length)];
     piece.color = color;
     piece.rotation = rotation;
@@ -321,7 +316,9 @@ export class TetrisEngine implements ITetrisEngine {
 
   // make sure to clear current piece from board before calling this
   // method or the rendering of the current piece will interfere.
-  private readonly canRotate = (nextRotation: Rotation): boolean => {
+  private readonly canRotate = (
+    nextRotation: TetrisTypes.Rotation
+  ): boolean => {
     const board = this.board;
     const currRowPos = this.currentPiece.rowPos;
     const nextShape = this.currentPiece.shape[nextRotation];
@@ -338,8 +335,8 @@ export class TetrisEngine implements ITetrisEngine {
 
   private readonly getNextRotation = (
     direction: 'right' | 'left'
-  ): Rotation => {
-    let rotation: Rotation = this.currentPiece.rotation;
+  ): TetrisTypes.Rotation => {
+    let rotation: TetrisTypes.Rotation = this.currentPiece.rotation;
     switch (direction) {
       case 'left':
         rotation += 90;
@@ -351,10 +348,10 @@ export class TetrisEngine implements ITetrisEngine {
         break;
     }
 
-    return rotation as Rotation;
+    return rotation as TetrisTypes.Rotation;
   }
 
-  private readonly getColPosForRotation = (r: Rotation): number => {
+  private readonly getColPosForRotation = (r: TetrisTypes.Rotation): number => {
     const shape = this.currentPiece.shape[r];
     const pieceWidth = shape[0].length;
     if (this.isAgainstWallOnRight(r)) {
@@ -402,7 +399,7 @@ export class TetrisEngine implements ITetrisEngine {
   }
 
   private readonly isAgainstWallOnRight = (
-    rotation: Rotation = this.currentPiece.rotation
+    rotation: TetrisTypes.Rotation = this.currentPiece.rotation
   ): boolean => {
     const xLen = this.currentPiece.shape[rotation][0].length;
     const rightSide = this.currentPiece.colPos + xLen;

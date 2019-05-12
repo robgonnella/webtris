@@ -1,10 +1,12 @@
 import * as React from 'react';
 import Webtris from './webtris';
 import {
-  createTetrisWorker,
   getInitialState as getInitialTetrisState,
   TetrisState,
   TetrisEngineAction } from '../lib/tetris-engine';
+
+// @ts-ignore
+import { createTetrisWorker } from './worker';
 
 interface WebtrisState {
   tetris: TetrisState;
@@ -17,25 +19,26 @@ interface WebtrisState {
 }
 
 export interface WebtrisProps {
-  tetrisThemeSrc: string;
-  rotateAudioSrc: string;
-  lineRemovalAudioSrc: string;
-  lineRemoval4AudioSrc: string;
-  hitAudioSrc: string;
-  backgroundImage: string;
+  style?: React.CSSProperties;
   blockWidth?: number;
+  tetrisThemeSrc?: string;
+  rotateAudioSrc?: string;
+  lineRemovalAudioSrc?: string;
+  lineRemoval4AudioSrc?: string;
+  hitAudioSrc?: string;
+  backgroundImage?: string;
 };
 
-export default class WebtrisContainer extends React.Component<
+export class WebtrisContainer extends React.Component<
   WebtrisProps,
   WebtrisState
 > {
   private readonly tetrisWorker: Worker = createTetrisWorker();
-  private readonly gameMusic = new Audio();
-  private readonly rotateSound = new Audio();
-  private readonly lineRemovalSound = new Audio();
-  private readonly lineRemoval4Sound = new Audio();
-  private readonly hitSound = new Audio();
+  private readonly gameMusic?: HTMLAudioElement;
+  private readonly rotateSound?: HTMLAudioElement;
+  private readonly lineRemovalSound?: HTMLAudioElement;
+  private readonly lineRemoval4Sound?: HTMLAudioElement;
+  private readonly hitSound?: HTMLAudioElement;
   private boardCanvas?: HTMLCanvasElement;
   private nextCanvas?: HTMLCanvasElement;
   private boardCtx?: CanvasRenderingContext2D;
@@ -43,26 +46,35 @@ export default class WebtrisContainer extends React.Component<
 
   constructor(props: WebtrisProps) {
     super(props);
-    console.log('----worker -->', this.tetrisWorker);
-    this.gameMusic.autoplay = false;
-    this.gameMusic.addEventListener('ended', function () {
-      this.currentTime = 0;
-      this.play();
-    }, false);
-    this.gameMusic.src = props.tetrisThemeSrc;
-    this.rotateSound.autoplay = false;
-    this.rotateSound.src = props.rotateAudioSrc;
-    this.lineRemovalSound.autoplay = false;
-    this.lineRemovalSound.src = props.lineRemovalAudioSrc;
-    this.lineRemoval4Sound.autoplay = false;
-    this.lineRemoval4Sound.src = props.lineRemoval4AudioSrc;
-    this.hitSound.autoplay = false;
-    this.hitSound.src = props.hitAudioSrc;
+    if (this.props.tetrisThemeSrc) {
+      this.gameMusic = new Audio(this.props.tetrisThemeSrc);
+      this.gameMusic.autoplay = false;
+      this.gameMusic.addEventListener('ended', function () {
+        this.currentTime = 0;
+        this.play();
+      }, false);
+    }
+    if (this.props.rotateAudioSrc) {
+      this.rotateSound = new Audio(this.props.rotateAudioSrc);
+      this.rotateSound.autoplay = false;
+    }
+    if (this.props.lineRemovalAudioSrc) {
+      this.lineRemovalSound = new Audio(this.props.lineRemovalAudioSrc);
+      this.lineRemovalSound.autoplay = false;
+    }
+    if (this.props.lineRemoval4AudioSrc) {
+      this.lineRemoval4Sound = new Audio(this.props.lineRemoval4AudioSrc);
+      this.lineRemoval4Sound.autoplay = false;
+    }
+    if (this.props.hitAudioSrc) {
+      this.hitSound = new Audio(this.props.hitAudioSrc);
+      this.hitSound.autoplay = false;
+    }
 
     this.tetrisWorker.onmessage = this.handleTetrisStateChange;
 
     const initalTetrisState = getInitialTetrisState();
-    const blockWidth = props.blockWidth || 10;
+    const blockWidth = props.blockWidth || 15;
     this.state = {
       tetris: getInitialTetrisState(),
       isPaused: false,
@@ -99,12 +111,12 @@ export default class WebtrisContainer extends React.Component<
 
       if (evt.key === 'a' || evt.key === 'A') {
         this.tetrisWorker.postMessage(TetrisEngineAction.RotateLeft)
-        this.rotateSound.play();
+        this.rotateSound && this.rotateSound.play();
       }
 
       if (evt.key === 's' || evt.key === 'S') {
         this.tetrisWorker.postMessage(TetrisEngineAction.RotateRight)
-        this.rotateSound.play();
+        this.rotateSound && this.rotateSound.play();
       }
 
       if (evt.key === 'ArrowLeft') {
@@ -127,7 +139,7 @@ export default class WebtrisContainer extends React.Component<
     });
   }
 
-  componentDidUpdate(prevProps: {}, prevState: WebtrisState) {
+  componentDidUpdate() {
     this.drawBoard();
     this.drawNextPiece();
   }
@@ -138,6 +150,7 @@ export default class WebtrisContainer extends React.Component<
 
   public render() {
     const props = {
+      style: this.props.style,
       blockWidth: this.state.blockWidth,
       canvasWidth: this.state.canvasWidth,
       canvasHeight: this.state.canvasHeight,
@@ -161,9 +174,9 @@ export default class WebtrisContainer extends React.Component<
   private toggleGameAudio = (): void => {
     const isPaused = !this.state.isPaused;
     if (isPaused) {
-      this.gameMusic.pause()
+      this.gameMusic && this.gameMusic.pause()
     } else {
-      this.gameMusic.play();
+      this.gameMusic && this.gameMusic.play();
     }
     this.setState({isPaused});
   }
@@ -172,12 +185,12 @@ export default class WebtrisContainer extends React.Component<
     if (e.data.clearedLines > this.state.tetris.clearedLines) {
       const diff = e.data.clearedLines - this.state.tetris.clearedLines;
       if (diff >= 4) {
-        this.lineRemoval4Sound.play();
+        this.lineRemoval4Sound && this.lineRemoval4Sound.play();
       } else {
-        this.lineRemovalSound.play();
+        this.lineRemovalSound && this.lineRemovalSound.play();
       }
     }
-    if (e.data.gameover) {
+    if (e.data.gameover && this.gameMusic) {
       this.gameMusic.pause();
       this.gameMusic.currentTime = 0;
     }
@@ -188,7 +201,7 @@ export default class WebtrisContainer extends React.Component<
       JSON.stringify(newStats) !== JSON.stringify(currStats) &&
       JSON.stringify(currStats) !== JSON.stringify(initialState.stats)
     ) {
-      this.hitSound.play();
+      this.hitSound && this.hitSound.play();
     }
     this.setState({tetris: e.data});
   }
@@ -196,7 +209,7 @@ export default class WebtrisContainer extends React.Component<
   private startGame = (): void => {
     this.tetrisWorker.postMessage(TetrisEngineAction.Play)
     this.drawStatsPieces();
-    this.gameMusic.play();
+    this.gameMusic && this.gameMusic.play();
     this.setState({firstLaunch: false});
   }
 
@@ -204,7 +217,7 @@ export default class WebtrisContainer extends React.Component<
     this.tetrisWorker.postMessage(
       [TetrisEngineAction.PlayAgain, this.state.selectedLevel]
     )
-    this.gameMusic.play();
+    this.gameMusic && this.gameMusic.play();
   }
 
   private selectLevel = (level: number) => {
