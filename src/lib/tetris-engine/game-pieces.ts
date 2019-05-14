@@ -1,7 +1,7 @@
-import { GamePiece } from './types';
+import { Color, GamePiece, GamePieceType } from './types';
 
 export const L: GamePiece = {
-  type: 'L',
+  type: GamePieceType.L,
   shape: {
     0: [
       [1, 0],
@@ -25,11 +25,11 @@ export const L: GamePiece = {
   rotation: 0,
   rowPos: 0,
   colPos: 4,
-  color: 'magenta'
+  color: Color.magenta,
 }
 
 export const RL: GamePiece = {
-  type: 'RL',
+  type: GamePieceType.RL,
   shape: {
     0: [
       [0, 1],
@@ -53,11 +53,11 @@ export const RL: GamePiece = {
   rotation: 0,
   rowPos: 0,
   colPos: 3,
-  color: 'red'
+  color: Color.red,
 }
 
 export const Zig: GamePiece = {
-  type: 'Zig',
+  type: GamePieceType.Zig,
   shape: {
     0: [
       [1, 1, 0],
@@ -81,11 +81,11 @@ export const Zig: GamePiece = {
   rotation: 0,
   rowPos: 0,
   colPos: 3,
-  color: 'cyan'
+  color: Color.cyan,
 }
 
 export const Zag: GamePiece = {
-  type: 'Zag',
+  type: GamePieceType.Zag,
   shape: {
     0: [
       [0, 1, 1],
@@ -109,11 +109,11 @@ export const Zag: GamePiece = {
   rotation: 0,
   rowPos: 0,
   colPos: 3,
-  color: 'blue'
+  color: Color.blue,
 }
 
 export const Line: GamePiece = {
-  type: 'Line',
+  type: GamePieceType.Line,
   shape: {
     0: [
       [1],
@@ -137,11 +137,11 @@ export const Line: GamePiece = {
   rotation: 0,
   rowPos: 0,
   colPos: 4,
-  color: 'green'
+  color: Color.green,
 }
 
 export const Block: GamePiece = {
-  type: 'Block',
+  type: GamePieceType.Block,
   shape: {
     0: [
       [1, 1],
@@ -163,11 +163,11 @@ export const Block: GamePiece = {
   rotation: 0,
   rowPos: 0,
   colPos: 3,
-  color: 'yellow'
+  color: Color.yellow,
 }
 
 export const T: GamePiece = {
-  type: 'T',
+  type: GamePieceType.T,
   shape: {
     0: [
       [0, 1, 0],
@@ -191,5 +191,5 @@ export const T: GamePiece = {
   rotation: 0,
   rowPos: 0,
   colPos: 4,
-  color: 'purple'
+  color: Color.purple,
 }

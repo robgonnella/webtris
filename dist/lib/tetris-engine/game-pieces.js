@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var types_1 = require("./types");
 exports.L = {
-    type: 'L',
+    type: types_1.GamePieceType.L,
     shape: {
         0: [
             [1, 0],
@@ -25,10 +26,10 @@ exports.L = {
     rotation: 0,
     rowPos: 0,
     colPos: 4,
-    color: 'magenta'
+    color: types_1.Color.magenta,
 };
 exports.RL = {
-    type: 'RL',
+    type: types_1.GamePieceType.RL,
     shape: {
         0: [
             [0, 1],
@@ -52,10 +53,10 @@ exports.RL = {
     rotation: 0,
     rowPos: 0,
     colPos: 3,
-    color: 'red'
+    color: types_1.Color.red,
 };
 exports.Zig = {
-    type: 'Zig',
+    type: types_1.GamePieceType.Zig,
     shape: {
         0: [
             [1, 1, 0],
@@ -79,10 +80,10 @@ exports.Zig = {
     rotation: 0,
     rowPos: 0,
     colPos: 3,
-    color: 'cyan'
+    color: types_1.Color.cyan,
 };
 exports.Zag = {
-    type: 'Zag',
+    type: types_1.GamePieceType.Zag,
     shape: {
         0: [
             [0, 1, 1],
@@ -106,10 +107,10 @@ exports.Zag = {
     rotation: 0,
     rowPos: 0,
     colPos: 3,
-    color: 'blue'
+    color: types_1.Color.blue,
 };
 exports.Line = {
-    type: 'Line',
+    type: types_1.GamePieceType.Line,
     shape: {
         0: [
             [1],
@@ -133,10 +134,10 @@ exports.Line = {
     rotation: 0,
     rowPos: 0,
     colPos: 4,
-    color: 'green'
+    color: types_1.Color.green,
 };
 exports.Block = {
-    type: 'Block',
+    type: types_1.GamePieceType.Block,
     shape: {
         0: [
             [1, 1],
@@ -158,10 +159,10 @@ exports.Block = {
     rotation: 0,
     rowPos: 0,
     colPos: 3,
-    color: 'yellow'
+    color: types_1.Color.yellow,
 };
 exports.T = {
-    type: 'T',
+    type: types_1.GamePieceType.T,
     shape: {
         0: [
             [0, 1, 0],
@@ -185,5 +186,5 @@ exports.T = {
     rotation: 0,
     rowPos: 0,
     colPos: 4,
-    color: 'purple'
+    color: types_1.Color.purple,
 };

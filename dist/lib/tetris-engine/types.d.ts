@@ -1,8 +1,25 @@
 export declare type NumberVector = Array<number[]>;
 export declare type Board = Array<Array<0 | Color>>;
-export declare type Color = 'red' | 'cyan' | 'magenta' | 'blue' | 'yellow' | 'green' | 'purple';
+export declare enum Color {
+    'red' = "red",
+    'cyan' = "cyan",
+    'magenta' = "magenta",
+    'blue' = "blue",
+    'yellow' = "yellow",
+    'green' = "green",
+    'purple' = "purple"
+}
+export declare enum GamePieceType {
+    'T' = "T",
+    'L' = "L",
+    'RL' = "RL",
+    'Zig' = "Zig",
+    'Zag' = "Zag",
+    'Line' = "Line",
+    'Block' = "Block"
+}
 export interface GamePiece {
-    type: 'T' | 'L' | 'RL' | 'Zig' | 'Zag' | 'Line' | 'Block';
+    type: GamePieceType;
     shape: {
         0: NumberVector;
         90: NumberVector;
@@ -16,12 +33,12 @@ export interface GamePiece {
 }
 export declare type Rotation = keyof GamePiece['shape'];
 export interface StatsPiece {
-    type: GamePiece['type'];
-    shape: Array<number[]>;
+    type: GamePieceType;
+    shape: NumberVector;
     color: Color;
     stats: number;
 }
-export declare type Stats = Record<GamePiece['type'], StatsPiece>;
+export declare type Stats = Record<GamePieceType, StatsPiece>;
 export interface TetrisState {
     board: Board;
     level: number;
@@ -29,7 +46,7 @@ export interface TetrisState {
     clearedLines: number;
     gameover: boolean;
     gameInProgress: boolean;
-    nextShape: Array<number[]>;
+    nextShape: NumberVector;
     nextColor: Color;
     stats: Stats;
 }

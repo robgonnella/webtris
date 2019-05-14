@@ -41,10 +41,12 @@ function modifyModuleOutput(fileContent: string): Promise<string> {
       if (line.startsWith('Object.defineProperty')) { return; }
       if (line.includes('require')) { return; }
 
-      line = line.replace(/(var\sTetrisEngineAction);/, '$1 = {};')
-      line = line.replace(/TetrisEngineAction\s\=\sexports\.TetrisEngineAction\s\|\|\s\(exports\.TetrisEngineAction\s\=\s\{\}\)/, 'TetrisEngineAction');
       line = line.replace(/game\_pieces\_1\./g, '')
-      line = line.replace(/exports\./g, 'const ');
+      line = line.replace(/types\_1\./g, '')
+      line = line.replace(/(\|\|\s\()exports\.(\w+)\s\=/, '$1 $2 =');
+      line = line.replace(/exports\.(\w+)\s\=/, 'const $1 =');
+      line = line.replace(/exports\./g, '');
+      line = line.replace(/TetrisTypes\./g, '');
       // Omit module exports:
       // After above replacements it will look something like:
       // const TetrisThing = TetrisThing;

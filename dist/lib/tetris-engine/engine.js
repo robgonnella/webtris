@@ -11,47 +11,48 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var TetrisTypes = require("./types");
 var game_pieces_1 = require("./game-pieces");
 function getInitialStats() {
     return {
         T: {
-            type: 'T',
+            type: TetrisTypes.GamePieceType.T,
             shape: game_pieces_1.T.shape['0'],
             stats: 0,
             color: game_pieces_1.T.color
         },
         L: {
-            type: 'L',
+            type: TetrisTypes.GamePieceType.L,
             shape: game_pieces_1.L.shape['90'],
             stats: 0,
             color: game_pieces_1.L.color
         },
         RL: {
-            type: 'RL',
+            type: TetrisTypes.GamePieceType.RL,
             shape: game_pieces_1.RL.shape['90'],
             stats: 0,
             color: game_pieces_1.RL.color
         },
         Zig: {
-            type: 'Zig',
+            type: TetrisTypes.GamePieceType.Zig,
             shape: game_pieces_1.Zig.shape['0'],
             stats: 0,
             color: game_pieces_1.Zig.color
         },
         Zag: {
-            type: 'Zag',
+            type: TetrisTypes.GamePieceType.Zag,
             shape: game_pieces_1.Zag.shape['0'],
             stats: 0,
             color: game_pieces_1.Zag.color
         },
         Line: {
-            type: 'Line',
+            type: TetrisTypes.GamePieceType.Line,
             shape: game_pieces_1.Line.shape['90'],
             stats: 0,
             color: game_pieces_1.Line.color
         },
         Block: {
-            type: 'Block',
+            type: TetrisTypes.GamePieceType.Block,
             shape: game_pieces_1.Block.shape['0'],
             stats: 0,
             color: game_pieces_1.Block.color
@@ -81,13 +82,13 @@ function generateCleanBoard() {
 }
 var rotations = [0, 90, 180, 270];
 var colors = [
-    'red',
-    'blue',
-    'green',
-    'cyan',
-    'magenta',
-    'yellow',
-    'purple'
+    TetrisTypes.Color.red,
+    TetrisTypes.Color.blue,
+    TetrisTypes.Color.green,
+    TetrisTypes.Color.cyan,
+    TetrisTypes.Color.magenta,
+    TetrisTypes.Color.yellow,
+    TetrisTypes.Color.purple,
 ];
 var MULTIPLIERS = {
     0: 0,

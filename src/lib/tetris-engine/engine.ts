@@ -4,43 +4,43 @@ import { L, RL, Zig, Zag, Line, Block, T } from './game-pieces';
 function getInitialStats(): TetrisTypes.Stats {
   return {
     T: {
-      type: 'T',
+      type: TetrisTypes.GamePieceType.T,
       shape: T.shape['0'],
       stats: 0,
       color: T.color
     },
     L: {
-      type: 'L',
+      type: TetrisTypes.GamePieceType.L,
       shape: L.shape['90'],
       stats: 0,
       color: L.color
     },
     RL: {
-      type: 'RL',
+      type: TetrisTypes.GamePieceType.RL,
       shape: RL.shape['90'],
       stats: 0,
       color: RL.color
     },
     Zig: {
-      type: 'Zig',
+      type: TetrisTypes.GamePieceType.Zig,
       shape: Zig.shape['0'],
       stats: 0,
       color: Zig.color
     },
     Zag: {
-      type: 'Zag',
+      type: TetrisTypes.GamePieceType.Zag,
       shape: Zag.shape['0'],
       stats: 0,
       color: Zag.color
     },
     Line: {
-      type: 'Line',
+      type: TetrisTypes.GamePieceType.Line,
       shape: Line.shape['90'],
       stats: 0,
       color: Line.color
     },
     Block: {
-      type: 'Block',
+      type: TetrisTypes.GamePieceType.Block,
       shape: Block.shape['0'],
       stats: 0,
       color: Block.color
@@ -75,13 +75,13 @@ function generateCleanBoard(): TetrisTypes.Board {
 
 const rotations: TetrisTypes.Rotation[] = [0, 90, 180, 270];
 const colors: TetrisTypes.Color[] = [
-  'red',
-  'blue',
-  'green',
-  'cyan',
-  'magenta',
-  'yellow',
-  'purple'
+  TetrisTypes.Color.red,
+  TetrisTypes.Color.blue,
+  TetrisTypes.Color.green,
+  TetrisTypes.Color.cyan,
+  TetrisTypes.Color.magenta,
+  TetrisTypes.Color.yellow,
+  TetrisTypes.Color.purple,
 ];
 const MULTIPLIERS = {
   0: 0,
