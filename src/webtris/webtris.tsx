@@ -7,7 +7,7 @@ interface StatsProps {
   piece: StatsPiece;
   blockWidth: number;
 }
-const PieceWithStats: React.StatelessComponent<StatsProps> = (
+const PieceWithStats: React.FunctionComponent<StatsProps> = (
   props: StatsProps
 ): React.ReactElement<StatsProps> => {
   return (
@@ -44,7 +44,7 @@ interface SideCarLeftProps {
   gameInProgress: boolean
   gameover: boolean;
 }
-const SideCarLeft: React.StatelessComponent<SideCarLeftProps> = (
+const SideCarLeft: React.FunctionComponent<SideCarLeftProps> = (
   props: SideCarLeftProps
 ): React.ReactElement<SideCarLeftProps> => {
   let pieces: React.ReactElement<StatsProps>[] = [];
@@ -83,7 +83,7 @@ interface SelectLevelProps {
   selectedLevel: number;
   selectLevel(level: number): void;
 }
-const SelectLevel: React.StatelessComponent<SelectLevelProps> = (
+const SelectLevel: React.FunctionComponent<SelectLevelProps> = (
   props: SelectLevelProps
 ): React.ReactElement<SelectLevelProps> => {
   let levels1: JSX.Element[] = [];
@@ -147,7 +147,6 @@ const SelectLevel: React.StatelessComponent<SelectLevelProps> = (
 }
 
 interface PlayGameProps {
-  firstLaunch: boolean;
   finalLevel: number;
   finalScore: number;
   gameover: boolean;
@@ -156,7 +155,7 @@ interface PlayGameProps {
   startGame(): void;
   playAgain(): void;
 }
-const PlayGame: React.StatelessComponent<PlayGameProps> = (
+const PlayGame: React.FunctionComponent<PlayGameProps> = (
   props: PlayGameProps
 ): React.ReactElement<PlayGameProps> => {
   const buttonTitle = props.gameover ? 'Play Again' : 'Start Game';
@@ -170,7 +169,6 @@ const PlayGame: React.StatelessComponent<PlayGameProps> = (
       </div>
     ) :
     null;
-  const instructions = props.firstLaunch ? <Instructions /> : null;
   return (
     <div>
       {gameOverMessage}
@@ -181,19 +179,42 @@ const PlayGame: React.StatelessComponent<PlayGameProps> = (
       <button onClick={buttonAction}>
         {buttonTitle}
       </button>
-      { instructions }
     </div>
   );
 }
 
-const Instructions: React.StatelessComponent<{}> = (
+interface InstructionProps {
+  rotateRightKey: string;
+  rotateLeftKey: string;
+  moveLeftKey: string;
+  moveRightKey: string;
+  moveDownKey: string;
+  pauseKey: string;
+}
+
+function getKeyName(key: string): string {
+  return key === ' ' ? 'Space' : key;
+}
+
+const Instructions: React.FunctionComponent<InstructionProps> = (
+  props
 ): React.ReactElement<{}> => {
   return (
-    <React.Fragment>
-      <p>Use arrow keys to move piece</p>
-      <p>Press "a" or "s" to rotate piece</p>
-      <p>Press spacebar to pause game</p>
-    </React.Fragment>
+    <div style={{
+        backgroundColor: 'midnightblue',
+        border: '5px solid grey',
+        padding: 10,
+        maxWidth: 500,
+        margin: '0 auto',
+      }}
+    >
+      <p>Press {getKeyName(props.moveLeftKey)} key to move piece left</p>
+      <p>Press {getKeyName(props.moveRightKey)} key to move piece right</p>
+      <p>Press {getKeyName(props.moveDownKey)} key to move piece down</p>
+      <p>Press {getKeyName(props.rotateLeftKey)} key to rotate piece left</p>
+      <p>Press {getKeyName(props.rotateRightKey)} key to rotate piece right</p>
+      <p>Press {getKeyName(props.pauseKey)} to pause game</p>
+    </div>
   );
 }
 
@@ -221,7 +242,6 @@ interface SideCarRightProps {
   nextShape: Array<number[]>;
   level: number;
   score: number;
-  firstLaunch: boolean;
   gameover: boolean;
   gameInProgress: boolean;
   selectedLevel: number;
@@ -229,13 +249,12 @@ interface SideCarRightProps {
   playAgain(): void;
   startGame(): void;
 }
-const SideCarRight: React.StatelessComponent<SideCarRightProps> = (
+const SideCarRight: React.FunctionComponent<SideCarRightProps> = (
   props: SideCarRightProps
 ): React.ReactElement<SideCarRightProps> => {
   let content = props.gameInProgress ?
     <LevelAndScore level={props.level} score={props.score} /> :
     <PlayGame
-      firstLaunch={props.firstLaunch}
       gameover={props.gameover}
       finalScore={props.score}
       finalLevel={props.level}
@@ -274,7 +293,7 @@ interface BoardProps {
   canvasHeight: number;
   clearedLines: number;
 }
-const Board: React.StatelessComponent<BoardProps> = (
+const Board: React.FunctionComponent<BoardProps> = (
   props: BoardProps
 ): React.ReactElement<BoardProps> => {
   return (
@@ -311,10 +330,15 @@ const Board: React.StatelessComponent<BoardProps> = (
 }
 
 interface WebtrisProps {
+  rotateRightKey: string;
+  rotateLeftKey: string;
+  moveLeftKey: string;
+  moveRightKey: string;
+  moveDownKey: string;
+  pauseKey: string;
   blockWidth: number;
   canvasWidth: number;
   canvasHeight: number;
-  firstLaunch: boolean;
   stats: TetrisState['stats'];
   level: number;
   score: number;
@@ -330,23 +354,24 @@ interface WebtrisProps {
   playAgain(): void;
 }
 
-const Webtris: React.StatelessComponent<WebtrisProps> = (
+const Webtris: React.FunctionComponent<WebtrisProps> = (
   props: WebtrisProps
 ): React.ReactElement<WebtrisProps> => {
+  const divStyle: React.CSSProperties = {
+    backgroundImage: `url(${props.backgroundImage || ''})`,
+    width: '100vw',
+    height: '100vh',
+    textAlign: 'center',
+    color: 'white',
+    verticalAlign: 'top',
+    paddingTop: 25,
+    fontFamily: 'Georgia',
+    letterSpacing: 2,
+    ...props.style,
+  };
+
   return (
-    <div style={{
-        backgroundImage: `url(${props.backgroundImage || ''})`,
-        width: '100vw',
-        height: '100vh',
-        textAlign: 'center',
-        color: 'white',
-        verticalAlign: 'top',
-        paddingTop: 25,
-        fontFamily: 'Georgia',
-        letterSpacing: 2,
-        ...props.style,
-      }}
-    >
+    <div style={divStyle}>
       <SideCarLeft
         width={props.canvasWidth}
         height={props.canvasHeight}
@@ -364,7 +389,6 @@ const Webtris: React.StatelessComponent<WebtrisProps> = (
         width={props.canvasWidth}
         height={props.canvasHeight}
         blockWidth={props.blockWidth}
-        firstLaunch={props.firstLaunch}
         nextShape={props.nextShape}
         level={props.level}
         score={props.score}
@@ -374,6 +398,14 @@ const Webtris: React.StatelessComponent<WebtrisProps> = (
         startGame={props.startGame}
         selectedLevel={props.selectedLevel}
         selectLevel={props.selectLevel}
+      />
+      <Instructions
+        rotateRightKey={props.rotateRightKey}
+        rotateLeftKey={props.rotateLeftKey}
+        moveLeftKey={props.moveLeftKey}
+        moveRightKey={props.moveRightKey}
+        moveDownKey={props.moveDownKey}
+        pauseKey={props.pauseKey}
       />
     </div>
   );

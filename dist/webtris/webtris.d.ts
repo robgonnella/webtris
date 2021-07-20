@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { TetrisState } from '../lib/tetris-engine';
 interface WebtrisProps {
+    rotateRightKey: string;
+    rotateLeftKey: string;
+    moveLeftKey: string;
+    moveRightKey: string;
+    moveDownKey: string;
+    pauseKey: string;
     blockWidth: number;
     canvasWidth: number;
     canvasHeight: number;
-    firstLaunch: boolean;
     stats: TetrisState['stats'];
     level: number;
     score: number;
@@ -19,5 +24,5 @@ interface WebtrisProps {
     startGame(): void;
     playAgain(): void;
 }
-declare const Webtris: React.StatelessComponent<WebtrisProps>;
+declare const Webtris: React.FunctionComponent<WebtrisProps>;
 export default Webtris;

@@ -90,18 +90,46 @@ var PlayGame = function (props) {
                 "Final Score: ",
                 props.finalScore))) :
         null;
-    var instructions = props.firstLaunch ? React.createElement(Instructions, null) : null;
     return (React.createElement("div", null,
         gameOverMessage,
         React.createElement(SelectLevel, { selectedLevel: props.selectedLevel, selectLevel: props.selectLevel }),
-        React.createElement("button", { onClick: buttonAction }, buttonTitle),
-        instructions));
+        React.createElement("button", { onClick: buttonAction }, buttonTitle)));
 };
-var Instructions = function () {
-    return (React.createElement(React.Fragment, null,
-        React.createElement("p", null, "Use arrow keys to move piece"),
-        React.createElement("p", null, "Press \"a\" or \"s\" to rotate piece"),
-        React.createElement("p", null, "Press spacebar to pause game")));
+function getKeyName(key) {
+    return key === ' ' ? 'Space' : key;
+}
+var Instructions = function (props) {
+    return (React.createElement("div", { style: {
+            backgroundColor: 'midnightblue',
+            border: '5px solid grey',
+            padding: 10,
+            maxWidth: 500,
+            margin: '0 auto',
+        } },
+        React.createElement("p", null,
+            "Press ",
+            getKeyName(props.moveLeftKey),
+            " key to move piece left"),
+        React.createElement("p", null,
+            "Press ",
+            getKeyName(props.moveRightKey),
+            " key to move piece right"),
+        React.createElement("p", null,
+            "Press ",
+            getKeyName(props.moveDownKey),
+            " key to move piece down"),
+        React.createElement("p", null,
+            "Press ",
+            getKeyName(props.rotateLeftKey),
+            " key to rotate piece left"),
+        React.createElement("p", null,
+            "Press ",
+            getKeyName(props.rotateRightKey),
+            " key to rotate piece right"),
+        React.createElement("p", null,
+            "Press ",
+            getKeyName(props.pauseKey),
+            " to pause game")));
 };
 var LevelAndScore = function (props) {
     return (React.createElement("div", { style: { marginTop: 25 } },
@@ -115,7 +143,7 @@ var LevelAndScore = function (props) {
 var SideCarRight = function (props) {
     var content = props.gameInProgress ?
         React.createElement(LevelAndScore, { level: props.level, score: props.score }) :
-        React.createElement(PlayGame, { firstLaunch: props.firstLaunch, gameover: props.gameover, finalScore: props.score, finalLevel: props.level, selectedLevel: props.selectedLevel, selectLevel: props.selectLevel, playAgain: props.playAgain, startGame: props.startGame });
+        React.createElement(PlayGame, { gameover: props.gameover, finalScore: props.score, finalLevel: props.level, selectedLevel: props.selectedLevel, selectLevel: props.selectLevel, playAgain: props.playAgain, startGame: props.startGame });
     var nextPieceBorder = props.gameInProgress ? '5px solid grey' : '';
     // always render canvas since we need consistent access to it
     return (React.createElement("div", { style: {
@@ -151,9 +179,11 @@ var Board = function (props) {
         React.createElement("canvas", { id: 'board-canvas', style: { border: '5px solid grey', backgroundColor: 'midnightblue' }, width: props.canvasWidth, height: props.canvasHeight })));
 };
 var Webtris = function (props) {
-    return (React.createElement("div", { style: __assign({ backgroundImage: "url(" + (props.backgroundImage || '') + ")", width: '100vw', height: '100vh', textAlign: 'center', color: 'white', verticalAlign: 'top', paddingTop: 25, fontFamily: 'Georgia', letterSpacing: 2 }, props.style) },
+    var divStyle = __assign({ backgroundImage: "url(" + (props.backgroundImage || '') + ")", width: '100vw', height: '100vh', textAlign: 'center', color: 'white', verticalAlign: 'top', paddingTop: 25, fontFamily: 'Georgia', letterSpacing: 2 }, props.style);
+    return (React.createElement("div", { style: divStyle },
         React.createElement(SideCarLeft, { width: props.canvasWidth, height: props.canvasHeight, blockWidth: props.blockWidth, stats: props.stats, gameInProgress: props.gameInProgress, gameover: props.gameover }),
         React.createElement(Board, { canvasWidth: props.canvasWidth, canvasHeight: props.canvasHeight, clearedLines: props.clearedLines }),
-        React.createElement(SideCarRight, { width: props.canvasWidth, height: props.canvasHeight, blockWidth: props.blockWidth, firstLaunch: props.firstLaunch, nextShape: props.nextShape, level: props.level, score: props.score, gameover: props.gameover, gameInProgress: props.gameInProgress, playAgain: props.playAgain, startGame: props.startGame, selectedLevel: props.selectedLevel, selectLevel: props.selectLevel })));
+        React.createElement(SideCarRight, { width: props.canvasWidth, height: props.canvasHeight, blockWidth: props.blockWidth, nextShape: props.nextShape, level: props.level, score: props.score, gameover: props.gameover, gameInProgress: props.gameInProgress, playAgain: props.playAgain, startGame: props.startGame, selectedLevel: props.selectedLevel, selectLevel: props.selectLevel }),
+        React.createElement(Instructions, { rotateRightKey: props.rotateRightKey, rotateLeftKey: props.rotateLeftKey, moveLeftKey: props.moveLeftKey, moveRightKey: props.moveRightKey, moveDownKey: props.moveDownKey, pauseKey: props.pauseKey })));
 };
 exports.default = Webtris;

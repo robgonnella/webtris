@@ -11,7 +11,6 @@ import { createTetrisWorker } from './worker';
 interface WebTrisState {
   tetris: TetrisState;
   isPaused: boolean;
-  firstLaunch: boolean;
   blockWidth: number;
   canvasWidth: number;
   canvasHeight: number;
@@ -19,6 +18,12 @@ interface WebTrisState {
 }
 
 export interface WebTrisProps {
+  rotateRightKey: string;
+  rotateLeftKey: string;
+  moveLeftKey: string;
+  moveRightKey: string;
+  moveDownKey: string;
+  pauseKey: string;
   style?: React.CSSProperties;
   blockWidth?: number;
   tetrisThemeSrc?: string;
@@ -79,7 +84,6 @@ export class WebTris extends React.Component<
     this.state = {
       tetris: getInitialTetrisState(),
       isPaused: false,
-      firstLaunch: true,
       blockWidth: blockWidth,
       canvasWidth: Math.max(
         initalTetrisState.board[0].length * blockWidth,
@@ -110,29 +114,29 @@ export class WebTris extends React.Component<
       if (!this.state.tetris.gameInProgress) { return; }
       if (!this.boardCtx || !this.boardCanvas) { return; }
 
-      if (evt.key === 'a' || evt.key === 'A') {
+      if (evt.key === this.props.rotateLeftKey) {
         this.tetrisWorker.postMessage(TetrisEngineAction.RotateLeft)
         this.rotateSound && this.rotateSound.play();
       }
 
-      if (evt.key === 's' || evt.key === 'S') {
+      if (evt.key === this.props.rotateRightKey) {
         this.tetrisWorker.postMessage(TetrisEngineAction.RotateRight)
         this.rotateSound && this.rotateSound.play();
       }
 
-      if (evt.key === 'ArrowLeft') {
+      if (evt.key === this.props.moveLeftKey) {
         this.tetrisWorker.postMessage(TetrisEngineAction.MoveLeft)
       }
 
-      if (evt.key === 'ArrowRight') {
+      if (evt.key === this.props.moveRightKey) {
         this.tetrisWorker.postMessage(TetrisEngineAction.MoveRight)
       }
 
-      if (evt.key === 'ArrowDown') {
+      if (evt.key === this.props.moveDownKey) {
         this.tetrisWorker.postMessage(TetrisEngineAction.MoveDown)
       }
 
-      if (evt.key === ' ') {
+      if (evt.key === this.props.pauseKey) {
         this.tetrisWorker.postMessage(TetrisEngineAction.TogglePause)
         this.toggleGameAudio();
       }
@@ -151,11 +155,16 @@ export class WebTris extends React.Component<
 
   public render() {
     const props = {
+      rotateRightKey: this.props.rotateRightKey,
+      rotateLeftKey: this.props.rotateLeftKey,
+      moveLeftKey: this.props.moveLeftKey,
+      moveRightKey: this.props.moveRightKey,
+      moveDownKey: this.props.moveDownKey,
+      pauseKey: this.props.pauseKey,
       style: this.props.style,
       blockWidth: this.state.blockWidth,
       canvasWidth: this.state.canvasWidth,
       canvasHeight: this.state.canvasHeight,
-      firstLaunch: this.state.firstLaunch,
       gameover: this.state.tetris.gameover,
       gameInProgress: this.state.tetris.gameInProgress,
       stats: this.state.tetris.stats,
@@ -219,7 +228,6 @@ export class WebTris extends React.Component<
     this.tetrisWorker.postMessage(TetrisEngineAction.Play)
     this.drawStatsPieces();
     this.gameMusic && this.gameMusic.play();
-    this.setState({firstLaunch: false});
     this.animate()
   }
 
