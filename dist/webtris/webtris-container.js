@@ -77,7 +77,6 @@ var WebTris = /** @class */ (function (_super) {
             _this.tetrisWorker.postMessage(tetris_engine_1.TetrisEngineAction.Play);
             _this.drawStatsPieces();
             _this.gameMusic && _this.gameMusic.play();
-            _this.setState({ firstLaunch: false });
             _this.animate();
         };
         _this.animate = function () {
@@ -209,7 +208,6 @@ var WebTris = /** @class */ (function (_super) {
         _this.state = {
             tetris: tetris_engine_1.getInitialState(),
             isPaused: false,
-            firstLaunch: true,
             blockWidth: blockWidth,
             canvasWidth: Math.max(initalTetrisState.board[0].length * blockWidth, 100),
             canvasHeight: Math.max(initalTetrisState.board.length * blockWidth, 220),
@@ -231,24 +229,24 @@ var WebTris = /** @class */ (function (_super) {
             if (!_this.boardCtx || !_this.boardCanvas) {
                 return;
             }
-            if (evt.key === 'a' || evt.key === 'A') {
+            if (evt.key === _this.props.rotateLeftKey) {
                 _this.tetrisWorker.postMessage(tetris_engine_1.TetrisEngineAction.RotateLeft);
                 _this.rotateSound && _this.rotateSound.play();
             }
-            if (evt.key === 's' || evt.key === 'S') {
+            if (evt.key === _this.props.rotateRightKey) {
                 _this.tetrisWorker.postMessage(tetris_engine_1.TetrisEngineAction.RotateRight);
                 _this.rotateSound && _this.rotateSound.play();
             }
-            if (evt.key === 'ArrowLeft') {
+            if (evt.key === _this.props.moveLeftKey) {
                 _this.tetrisWorker.postMessage(tetris_engine_1.TetrisEngineAction.MoveLeft);
             }
-            if (evt.key === 'ArrowRight') {
+            if (evt.key === _this.props.moveRightKey) {
                 _this.tetrisWorker.postMessage(tetris_engine_1.TetrisEngineAction.MoveRight);
             }
-            if (evt.key === 'ArrowDown') {
+            if (evt.key === _this.props.moveDownKey) {
                 _this.tetrisWorker.postMessage(tetris_engine_1.TetrisEngineAction.MoveDown);
             }
-            if (evt.key === ' ') {
+            if (evt.key === _this.props.pauseKey) {
                 _this.tetrisWorker.postMessage(tetris_engine_1.TetrisEngineAction.TogglePause);
                 _this.toggleGameAudio();
             }
@@ -263,11 +261,16 @@ var WebTris = /** @class */ (function (_super) {
     };
     WebTris.prototype.render = function () {
         var props = {
+            rotateRightKey: this.props.rotateRightKey,
+            rotateLeftKey: this.props.rotateLeftKey,
+            moveLeftKey: this.props.moveLeftKey,
+            moveRightKey: this.props.moveRightKey,
+            moveDownKey: this.props.moveDownKey,
+            pauseKey: this.props.pauseKey,
             style: this.props.style,
             blockWidth: this.state.blockWidth,
             canvasWidth: this.state.canvasWidth,
             canvasHeight: this.state.canvasHeight,
-            firstLaunch: this.state.firstLaunch,
             gameover: this.state.tetris.gameover,
             gameInProgress: this.state.tetris.gameInProgress,
             stats: this.state.tetris.stats,

@@ -3,13 +3,18 @@ import { TetrisState } from '../lib/tetris-engine';
 interface WebTrisState {
     tetris: TetrisState;
     isPaused: boolean;
-    firstLaunch: boolean;
     blockWidth: number;
     canvasWidth: number;
     canvasHeight: number;
     selectedLevel: number;
 }
 export interface WebTrisProps {
+    rotateRightKey: string;
+    rotateLeftKey: string;
+    moveLeftKey: string;
+    moveRightKey: string;
+    moveDownKey: string;
+    pauseKey: string;
     style?: React.CSSProperties;
     blockWidth?: number;
     tetrisThemeSrc?: string;
