@@ -82,22 +82,21 @@ async function getWorkerContent() {
 onmessage = (function() {
   "use strict"
   ${modifiedModuleContent}
+
   function postNewState(state) {
     postMessage(state);
   }
-  let tetrisEngine = new TetrisEngine({
-    onBoardUpdate: postNewState,
-    level: 0
-  });
+
+  let tetrisEngine = new TetrisEngine({ level: 0 });
+
   return (event) => {
     const command = Array.isArray(event.data) ? event.data[0] : event.data;
+
     switch (command) {
       case TetrisEngineAction.Play:
         return tetrisEngine.play();
       case TetrisEngineAction.PlayAgain:
-        return tetrisEngine = (
-          TetrisEngine.PlayAgain(postNewState, event.data[1])
-        );
+        return tetrisEngine = TetrisEngine.PlayAgain({ level: event.data[1] });
       case TetrisEngineAction.TogglePause:
         return tetrisEngine.togglePause();
       case TetrisEngineAction.SetLevel:
@@ -112,6 +111,8 @@ onmessage = (function() {
         return tetrisEngine.rotateLeft();
       case TetrisEngineAction.RotateRight:
         return tetrisEngine.rotateRight();
+      case TetrisEngineAction.StateRequest:
+        postMessage(tetrisEngine.getState());
     }
   }
 })();`;

@@ -42,12 +42,14 @@ var WebTris = /** @class */ (function (_super) {
             }
             else {
                 _this.gameMusic && _this.gameMusic.play();
+                _this.animate();
             }
             _this.setState({ isPaused: isPaused });
         };
         _this.handleTetrisStateChange = function (e) {
-            if (e.data.clearedLines > _this.state.tetris.clearedLines) {
-                var diff = e.data.clearedLines - _this.state.tetris.clearedLines;
+            var data = e.data;
+            if (data.clearedLines > _this.state.tetris.clearedLines) {
+                var diff = data.clearedLines - _this.state.tetris.clearedLines;
                 if (diff >= 4) {
                     _this.lineRemoval4Sound && _this.lineRemoval4Sound.play();
                 }
@@ -55,16 +57,19 @@ var WebTris = /** @class */ (function (_super) {
                     _this.lineRemovalSound && _this.lineRemovalSound.play();
                 }
             }
-            if (e.data.gameover && _this.gameMusic) {
+            if (data.gameover && _this.gameMusic) {
                 _this.gameMusic.pause();
                 _this.gameMusic.currentTime = 0;
             }
-            var newStats = e.data.stats;
+            var newStats = data.stats;
             var currStats = _this.state.tetris.stats;
             var initialState = tetris_engine_1.getInitialState();
             if (JSON.stringify(newStats) !== JSON.stringify(currStats) &&
                 JSON.stringify(currStats) !== JSON.stringify(initialState.stats)) {
                 _this.hitSound && _this.hitSound.play();
+            }
+            if (data.paused && _this.animationFrame) {
+                cancelAnimationFrame(_this.animationFrame);
             }
             _this.setState({ tetris: e.data });
         };
@@ -73,6 +78,11 @@ var WebTris = /** @class */ (function (_super) {
             _this.drawStatsPieces();
             _this.gameMusic && _this.gameMusic.play();
             _this.setState({ firstLaunch: false });
+            _this.animate();
+        };
+        _this.animate = function () {
+            _this.tetrisWorker.postMessage(tetris_engine_1.TetrisEngineAction.StateRequest);
+            _this.animationFrame = requestAnimationFrame(_this.animate);
         };
         _this.playAgain = function () {
             _this.tetrisWorker.postMessage([tetris_engine_1.TetrisEngineAction.PlayAgain, _this.state.selectedLevel]);

@@ -31,4 +31,5 @@ var TetrisEngineAction;
     TetrisEngineAction[TetrisEngineAction["MoveRight"] = 6] = "MoveRight";
     TetrisEngineAction[TetrisEngineAction["RotateLeft"] = 7] = "RotateLeft";
     TetrisEngineAction[TetrisEngineAction["RotateRight"] = 8] = "RotateRight";
+    TetrisEngineAction[TetrisEngineAction["StateRequest"] = 9] = "StateRequest";
 })(TetrisEngineAction = exports.TetrisEngineAction || (exports.TetrisEngineAction = {}));
