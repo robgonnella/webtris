@@ -1,6 +1,10 @@
 import * as TetrisTypes from './types';
 export declare function getInitialState(): TetrisTypes.TetrisState;
 declare type ChangeCallback = (s: TetrisTypes.TetrisState) => void;
+interface TetrisConstructorOpts {
+    onBoardUpdate?: ChangeCallback;
+    level?: number;
+}
 export declare class TetrisEngine implements TetrisTypes.ITetrisEngine {
     private readonly gamePieces;
     private board;
@@ -16,12 +20,9 @@ export declare class TetrisEngine implements TetrisTypes.ITetrisEngine {
     private nextPiece;
     private loopSpeed;
     private loopTimeout?;
-    private updateRenderer;
-    static PlayAgain(stateChangeHandler: ChangeCallback, level?: number): TetrisEngine;
-    constructor(opts: {
-        onBoardUpdate: ChangeCallback;
-        level?: number;
-    });
+    private onStateChange?;
+    static PlayAgain(opts: TetrisConstructorOpts): TetrisEngine;
+    constructor(opts: TetrisConstructorOpts);
     play: () => void;
     readonly togglePause: () => void;
     readonly setLevel: (level: number) => void;
@@ -50,5 +51,6 @@ export declare class TetrisEngine implements TetrisTypes.ITetrisEngine {
     private readonly isHit;
     private computeScore;
     private readonly clearLines;
+    private readonly updateRenderer;
 }
 export {};

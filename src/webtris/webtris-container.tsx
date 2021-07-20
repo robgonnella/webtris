@@ -43,6 +43,7 @@ export class WebTris extends React.Component<
   private nextCanvas?: HTMLCanvasElement;
   private boardCtx?: CanvasRenderingContext2D;
   private nextCtx?: CanvasRenderingContext2D;
+  private animationFrame?: number;
 
   constructor(props: WebTrisProps) {
     super(props);
@@ -177,24 +178,27 @@ export class WebTris extends React.Component<
       this.gameMusic && this.gameMusic.pause()
     } else {
       this.gameMusic && this.gameMusic.play();
+      this.animate();
     }
     this.setState({isPaused});
   }
 
   private handleTetrisStateChange = (e: MessageEvent): void => {
-    if (e.data.clearedLines > this.state.tetris.clearedLines) {
-      const diff = e.data.clearedLines - this.state.tetris.clearedLines;
+    const data = e.data as TetrisState
+
+    if (data.clearedLines > this.state.tetris.clearedLines) {
+      const diff = data.clearedLines - this.state.tetris.clearedLines;
       if (diff >= 4) {
         this.lineRemoval4Sound && this.lineRemoval4Sound.play();
       } else {
         this.lineRemovalSound && this.lineRemovalSound.play();
       }
     }
-    if (e.data.gameover && this.gameMusic) {
+    if (data.gameover && this.gameMusic) {
       this.gameMusic.pause();
       this.gameMusic.currentTime = 0;
     }
-    const newStats = e.data.stats;
+    const newStats = data.stats;
     const currStats = this.state.tetris.stats;
     const initialState = getInitialTetrisState();
     if (
@@ -203,6 +207,11 @@ export class WebTris extends React.Component<
     ) {
       this.hitSound && this.hitSound.play();
     }
+
+    if (data.paused && this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame)
+    }
+
     this.setState({tetris: e.data});
   }
 
@@ -211,6 +220,12 @@ export class WebTris extends React.Component<
     this.drawStatsPieces();
     this.gameMusic && this.gameMusic.play();
     this.setState({firstLaunch: false});
+    this.animate()
+  }
+
+  private animate = (): void => {
+    this.tetrisWorker.postMessage(TetrisEngineAction.StateRequest);
+    this.animationFrame = requestAnimationFrame(this.animate);
   }
 
   private playAgain = (): void => {

@@ -30,6 +30,7 @@ export declare class WebTris extends React.Component<WebTrisProps, WebTrisState>
     private nextCanvas?;
     private boardCtx?;
     private nextCtx?;
+    private animationFrame?;
     constructor(props: WebTrisProps);
     componentDidMount(): void;
     componentDidUpdate(): void;
@@ -38,6 +39,7 @@ export declare class WebTris extends React.Component<WebTrisProps, WebTrisState>
     private toggleGameAudio;
     private handleTetrisStateChange;
     private startGame;
+    private animate;
     private playAgain;
     private selectLevel;
     private readonly drawStatsPieces;

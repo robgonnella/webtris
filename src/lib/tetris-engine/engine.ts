@@ -56,6 +56,7 @@ export function getInitialState(): TetrisTypes.TetrisState {
     clearedLines: 0,
     gameover: false,
     gameInProgress: false,
+    paused: false,
     nextShape: T.shape['0'],
     nextColor: T.color,
     stats: getInitialStats()
@@ -95,6 +96,11 @@ function isColor(a: any): a is TetrisTypes.Color {
   return typeof a === 'string' && colors.includes(a as TetrisTypes.Color);
 }
 
+interface TetrisConstructorOpts {
+  onBoardUpdate?: ChangeCallback;
+  level?: number;
+}
+
 export class TetrisEngine implements TetrisTypes.ITetrisEngine {
 
   private readonly gamePieces: TetrisTypes.GamePiece[] = [
@@ -113,24 +119,21 @@ export class TetrisEngine implements TetrisTypes.ITetrisEngine {
   private nextPiece: TetrisTypes.GamePiece;
   private loopSpeed: number = 1000;
   private loopTimeout?: NodeJS.Timer;
-  private updateRenderer: ChangeCallback;
+  private onStateChange?: ChangeCallback;
 
-  static PlayAgain(
-    stateChangeHandler: ChangeCallback,
-    level?: number
-  ): TetrisEngine {
-    const engine = new TetrisEngine({ onBoardUpdate: stateChangeHandler, level });
+  static PlayAgain(opts: TetrisConstructorOpts): TetrisEngine {
+    const engine = new TetrisEngine(opts);
     engine.play();
     return engine;
   }
 
-  constructor(opts: { onBoardUpdate: ChangeCallback, level?: number }) {
+  constructor(opts: TetrisConstructorOpts) {
     this.currentPiece = this.getRandomPiece();
-    this.updateRenderer = opts.onBoardUpdate;
+    this.onStateChange = opts.onBoardUpdate;
     this.stats[this.currentPiece.type].stats++
     this.nextPiece = this.getRandomPiece();
     this.setLevel(opts.level || 0);
-    this.updateRenderer(this.getState());
+    this.updateRenderer();
   }
 
   public play = (): void => {
@@ -144,11 +147,7 @@ export class TetrisEngine implements TetrisTypes.ITetrisEngine {
       clearTimeout(this.loopTimeout);
       this.loopTimeout = undefined
       this.paused = true;
-      // send out clean board on pause so users
-      // can't pause and plan
-      const data = this.getState();
-      data.board = generateCleanBoard();
-      this.updateRenderer(data);
+      this.updateRenderer();
     } else {
       this.paused = false;
       this.run();
@@ -197,12 +196,13 @@ export class TetrisEngine implements TetrisTypes.ITetrisEngine {
 
   private readonly getState = (): TetrisTypes.TetrisState => {
     return {
-      board: this.board,
+      board: this.paused ? generateCleanBoard() : this.board,
       level: this.level,
       score: this.score,
       clearedLines: this.clearedLines,
       gameover: this.gameover,
       gameInProgress: this.gameInProgress,
+      paused: this.paused,
       nextShape: this.nextPiece.shape[this.nextPiece.rotation],
       nextColor: this.nextPiece.color,
       stats: this.stats
@@ -273,7 +273,7 @@ export class TetrisEngine implements TetrisTypes.ITetrisEngine {
       }
     }
     this.board = board;
-    this.updateRenderer(this.getState());
+    this.updateRenderer();
   }
 
   private readonly renderNextPiece = (): void => {
@@ -448,7 +448,7 @@ export class TetrisEngine implements TetrisTypes.ITetrisEngine {
     }
     this.gameover = true;
     this.gameInProgress = false;
-    this.updateRenderer(this.getState());
+    this.updateRenderer();
   }
 
   private readonly isHit = (): boolean => {
@@ -510,7 +510,14 @@ export class TetrisEngine implements TetrisTypes.ITetrisEngine {
       }
     }
     this.computeScore(numClearedLines as 0 | 1 | 2 | 3 | 4);
-    this.updateRenderer(this.getState());
+    this.updateRenderer();
+  }
+
+  private readonly updateRenderer = async (): Promise<void> => {
+    if (this.onStateChange) {
+      this.onStateChange(this.getState());
+    }
+    return Promise.resolve();
   }
 
 }

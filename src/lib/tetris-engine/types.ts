@@ -53,6 +53,7 @@ export interface TetrisState {
   clearedLines: number;
   gameover: boolean;
   gameInProgress: boolean;
+  paused: boolean;
   nextShape: NumberVector;
   nextColor: Color;
   stats: Stats;
@@ -78,5 +79,6 @@ export enum TetrisEngineAction {
   MoveLeft,
   MoveRight,
   RotateLeft,
-  RotateRight
+  RotateRight,
+  StateRequest,
 }
