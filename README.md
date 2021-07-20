@@ -24,6 +24,12 @@ class MyApp extends React.Component {
 
   render() {
     const props: WebTrisProps = {
+      rotateLeftKey: 'Control',
+      rotateRightKey: 'Meta',
+      moveLeftKey: 'ArrowLeft',
+      moveRightKey: 'ArrowRight',
+      moveDownKey: 'ArrowDown',
+      pauseKey: 'Escape',
       tetrisThemeSrc: 'audio/theme.mp3',
       rotateAudioSrc: 'audio/rotate.mp3',
       lineRemovalAudioSrc: 'audio/remove.mp3',
@@ -37,7 +43,15 @@ class MyApp extends React.Component {
 }
 ```
 
-Props: All Props are optional
+Required Props:
+- rotateLeftKey - string: String value of the key to rotate pieces left
+- rotateRightKey - string: String value of the key to rotate pieces right
+- moveLeftKey - string: String value of the key to move pieces left
+- moveRightKey - string: String value of the key to move pieces right
+- moveDownKey - string: String value of the key to move pieces down
+- pauseKey - string: String value of the key to pause game
+  
+Optional Props:
 - style - React.CSSProperties: specify extra styling for the main component
 - blockWidth - number: determines the overall size of the same: default = 15;
 - backgroundImage - string: set a background image;
